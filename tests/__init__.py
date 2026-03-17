@@ -1,0 +1,1 @@
+"""EthicsCheck test suite."""
