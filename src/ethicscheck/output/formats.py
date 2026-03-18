@@ -1,6 +1,8 @@
 """Machine-readable output formats: JSON and SARIF 2.1.0."""
 from __future__ import annotations
+
 import json
+
 from ..models import AuditReport, CheckStatus
 
 
