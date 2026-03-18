@@ -30,17 +30,33 @@ def build_framework_map() -> dict[Any, Any]:
 
 
 def run_audit(target: str, cfg: EthicsCheckConfig) -> AuditReport:
-    """Run all configured frameworks against the target."""
+    """Run all configured frameworks against the target.
+
+    Built-in frameworks (eu-ai-act, nist-rmf, iso-42001) run according to
+    ``cfg.frameworks``.  Installed plugin frameworks (those with string keys
+    not in the built-in set) are always run automatically — opting in happens
+    at install time, not at config time.
+    """
     framework_map = build_framework_map()
     results: list[FrameworkResult] = []
+
+    # 1. Run configured built-in frameworks.
     for fw_enum in cfg.frameworks:
         fw_class = framework_map.get(fw_enum)
         if fw_class is None:
             continue
         fw = fw_class(target=target, config=cfg)
         checks = fw.run_all()
-        result = FrameworkResult(framework=fw_enum, checks=checks)
-        results.append(result)
+        results.append(FrameworkResult(framework=fw_enum, checks=checks))
+
+    # 2. Auto-run any installed plugin frameworks (string keys, not Framework enum).
+    builtin_keys = set(_BUILTIN_FRAMEWORKS.keys())
+    for fw_key, fw_class in framework_map.items():
+        if fw_key not in builtin_keys:
+            fw = fw_class(target=target, config=cfg)
+            checks = fw.run_all()
+            results.append(FrameworkResult(framework=fw_key, checks=checks))
+
     return AuditReport(target=target, frameworks=results)
 
 

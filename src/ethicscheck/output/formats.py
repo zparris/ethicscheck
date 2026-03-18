@@ -4,6 +4,14 @@ import json
 from ..models import AuditReport, CheckStatus
 
 
+def _fw_str(fw: object) -> str:
+    """Return the framework identifier as a plain string.
+
+    Works for both built-in Framework enum values and plugin-defined strings.
+    """
+    return fw.value if hasattr(fw, "value") else str(fw)  # type: ignore[union-attr]
+
+
 def to_json(report: AuditReport) -> str:
     """Serialise an AuditReport to a JSON string."""
     data = report.model_dump(mode="json")
@@ -32,9 +40,9 @@ def to_sarif(report: AuditReport) -> str:
                 "help": {"text": check.remediation or check.description},
                 "properties": {
                     "severity": check.severity.value,
-                    "framework": check.framework.value,
+                    "framework": _fw_str(check.framework),
                     "article_ref": check.article_ref,
-                    "tags": [check.framework.value, check.article_ref],
+                    "tags": [_fw_str(check.framework), check.article_ref],
                 },
             }
             rules.append(rule)
@@ -80,7 +88,7 @@ def to_sarif(report: AuditReport) -> str:
             },
             "results": results,
             "properties": {
-                "framework": fr.framework.value,
+                "framework": _fw_str(fr.framework),
                 "passed": fr.passed,
                 "failed": fr.failed,
                 "warnings": fr.warnings,

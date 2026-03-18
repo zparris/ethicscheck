@@ -38,6 +38,15 @@ _FRAMEWORK_LABEL: dict[str, str] = {
 }
 
 
+def _fw_str(fw: object) -> str:
+    """Return the framework identifier as a plain string.
+
+    Works for both built-in :class:`~ethicscheck.models.Framework` enum values
+    and plain strings registered by third-party plugins.
+    """
+    return fw.value if hasattr(fw, "value") else str(fw)  # type: ignore[union-attr]
+
+
 def _severity_text(severity: str) -> Text:
     t = Text(severity.upper())
     t.stylize(_SEVERITY_STYLE.get(severity, ""))
@@ -51,7 +60,7 @@ def _status_text(status: str) -> Text:
 
 
 def _print_framework_table(fr: FrameworkResult, console: Console) -> None:
-    label = _FRAMEWORK_LABEL.get(fr.framework.value, fr.framework.value)
+    label = _FRAMEWORK_LABEL.get(_fw_str(fr.framework), _fw_str(fr.framework).replace("-", " ").title())
     score_pct = f"{fr.score * 100:.0f}%"
     console.print(f"\n[bold]{label}[/bold]  [dim]{score_pct} compliant[/dim]")
 
@@ -137,7 +146,7 @@ def print_report(report: AuditReport, console: Console) -> None:
 
 def print_single_check(result: CheckResult, console: Console) -> None:
     """Print a single check result to the Rich console."""
-    fw_label = _FRAMEWORK_LABEL.get(result.framework.value, result.framework.value)
+    fw_label = _FRAMEWORK_LABEL.get(_fw_str(result.framework), _fw_str(result.framework).replace("-", " ").title())
     status_style = _STATUS_STYLE.get(result.status.value, "")
     icon = _STATUS_ICON.get(result.status.value, "")
     sev_style = _SEVERITY_STYLE.get(result.severity.value, "")
