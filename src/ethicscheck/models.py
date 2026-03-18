@@ -34,7 +34,7 @@ class CheckResult(BaseModel):
     description: str
     status: CheckStatus
     severity: Severity
-    framework: Framework
+    framework: Framework | str  # str allows plugin frameworks to use their own identifiers
     article_ref: str  # e.g. "Art. 9", "GOVERN 1.1", "Clause 6.1"
     evidence: list[str] = Field(default_factory=list)
     remediation: str = ""
@@ -42,7 +42,7 @@ class CheckResult(BaseModel):
 
 
 class FrameworkResult(BaseModel):
-    framework: Framework
+    framework: Framework | str  # str allows plugin frameworks
     checks: list[CheckResult]
     passed: int = 0
     failed: int = 0

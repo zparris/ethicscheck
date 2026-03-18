@@ -24,12 +24,16 @@ jobs:
         with:
           version: "latest"
           enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: uv sync --extra dev
 
       - name: Run tests
-        run: uv run pytest tests/ -v --tb=short
+        run: uv run pytest tests/ -v --tb=short -o "addopts="
 
       - name: Lint with ruff
         run: uv run ruff check src/
@@ -43,6 +47,10 @@ jobs:
       - uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "**/uv.lock"
+      - name: Set up Python
+        run: uv python install 3.12
       - name: Build wheel and sdist
         run: uv build
       - name: Upload artifacts

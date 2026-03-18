@@ -38,13 +38,18 @@ class BaseFramework(ABC):
 
     def _make_skipped(self, meta: dict[str, Any]) -> CheckResult:
         from ..models import Framework
+        raw_fw = meta.get("framework", "eu-ai-act")
+        try:
+            fw: Framework | str = Framework(raw_fw)
+        except ValueError:
+            fw = raw_fw  # Plugin frameworks use their own string identifier
         return CheckResult(
             check_id=meta["id"],
             title=meta["title"],
             description=meta.get("description", ""),
             status=CheckStatus.SKIP,
             severity=Severity(meta["severity"]),
-            framework=Framework(meta["framework"]) if "framework" in meta else Framework.EU_AI_ACT,
+            framework=fw,
             article_ref=meta.get("ref", ""),
             remediation="",
         )
