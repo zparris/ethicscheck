@@ -37,6 +37,18 @@ dev = [
 [project.scripts]
 ethicscheck = "ethicscheck.cli:app"
 
+[project.entry-points."ethicscheck.frameworks"]
+# This group is intentionally empty in the core package.
+# Third-party plugins register here to be auto-discovered by EthicsCheck.
+#
+# Example — in a plugin package's pyproject.toml:
+#
+#   [project.entry-points."ethicscheck.frameworks"]
+#   callchain = "ethicscheck_callchain:AICallChainFramework"
+#
+# Once installed (`pip install ethicscheck-plugin-callchain`), EthicsCheck
+# will discover and run the plugin automatically with no further configuration.
+
 [project.urls]
 Homepage = "https://github.com/ethicscheck/ethicscheck"
 Repository = "https://github.com/ethicscheck/ethicscheck"
