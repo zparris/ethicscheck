@@ -6,7 +6,9 @@ Enforcement dates:
   - High-risk embedded in Annex I products: August 2, 2027
 """
 from __future__ import annotations
+
 from typing import Any
+
 from ..models import CheckResult, Framework, Severity
 from .base import BaseFramework
 

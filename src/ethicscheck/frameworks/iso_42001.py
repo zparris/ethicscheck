@@ -5,7 +5,9 @@ Covers organisational context, leadership, planning, support, operations,
 performance evaluation, and continual improvement.
 """
 from __future__ import annotations
+
 from typing import Any
+
 from ..models import CheckResult, Framework, Severity
 from .base import BaseFramework
 

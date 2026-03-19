@@ -4,7 +4,9 @@ Published January 2023. Four core functions: Govern, Map, Measure, Manage.
 Quasi-mandatory for US federal AI deployments under EO 14110 and OMB M-24-10.
 """
 from __future__ import annotations
+
 from typing import Any
+
 from ..models import CheckResult, Framework, Severity
 from .base import BaseFramework
 
