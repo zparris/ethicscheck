@@ -1,12 +1,14 @@
 """Configuration management for EthicsCheck."""
 from __future__ import annotations
+
 import os
 from pathlib import Path
 from typing import Any
+
 import yaml
 from pydantic import BaseModel, Field
-from .models import Framework, Severity
 
+from .models import Framework, Severity
 
 CONFIG_FILENAMES = [".ethicscheck.yaml", ".ethicscheck.yml", "ethicscheck.yaml"]
 

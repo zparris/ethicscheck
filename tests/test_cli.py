@@ -22,10 +22,14 @@ def test_help() -> None:
 
 
 def test_audit_help() -> None:
+    # Use mix_stderr=False and strip ANSI codes; Rich may colour flag names
+    # which splits "--framework" into escape-code-separated characters.
+    import re
     result = runner.invoke(app, ["audit", "--help"])
     assert result.exit_code == 0
-    assert "--framework" in result.output
-    assert "--fail-on" in result.output
+    plain = re.sub(r"\x1b\[[0-9;]*m", "", result.output)
+    assert "--framework" in plain
+    assert "--fail-on" in plain
 
 
 def test_audit_empty_dir_exits_nonzero(tmp_path: Path) -> None:

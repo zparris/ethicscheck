@@ -1,9 +1,11 @@
 """Shared data models for EthicsCheck compliance results."""
 from __future__ import annotations
+
+import datetime
 from enum import Enum
 from typing import Any
+
 from pydantic import BaseModel, Field
-import datetime
 
 
 class Severity(str, Enum):

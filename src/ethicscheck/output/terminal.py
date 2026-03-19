@@ -1,11 +1,13 @@
 """Rich terminal output for EthicsCheck compliance reports."""
 from __future__ import annotations
+
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
-from rich import box
-from ..models import AuditReport, CheckResult, CheckStatus, Severity, FrameworkResult
+
+from ..models import AuditReport, CheckResult, CheckStatus, FrameworkResult
 
 _SEVERITY_STYLE: dict[str, str] = {
     "critical": "bold red",
@@ -74,7 +76,6 @@ def _print_framework_table(fr: FrameworkResult, console: Console) -> None:
     for c in fr.checks:
         icon = _STATUS_ICON.get(c.status.value, "?")
         sev_text = _severity_text(c.severity.value)
-        row_style = _STATUS_STYLE.get(c.status.value, "")
         table.add_row(
             Text.from_markup(icon),
             c.check_id,

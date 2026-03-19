@@ -1,13 +1,16 @@
 """EthicsCheck CLI - AI ethics pre-deployment compliance checker."""
 from __future__ import annotations
+
 import sys
 from pathlib import Path
 from typing import Annotated, Optional
+
 import typer
 from rich.console import Console
+
 from . import __version__
-from .config import load_config, EthicsCheckConfig
-from .models import Framework, Severity, AuditReport
+from .config import load_config
+from .models import Framework, Severity
 
 app = typer.Typer(
     name="ethicscheck",
@@ -67,9 +70,9 @@ def audit(
       [cyan]ethicscheck audit . --output json > report.json[/]
       [cyan]ethicscheck audit . --fail-on critical[/]
     """
-    from .runner import run_audit
-    from .output.terminal import print_report
     from .output.formats import to_json, to_sarif
+    from .output.terminal import print_report
+    from .runner import run_audit
 
     cfg = load_config(config_file)
 
@@ -168,8 +171,9 @@ def list_checks(
     ] = None,
 ) -> None:
     """List all available compliance checks."""
-    from .runner import get_all_checks
     from rich.table import Table
+
+    from .runner import get_all_checks
 
     checks = get_all_checks()
     if framework:
