@@ -430,6 +430,47 @@ This means the more documentation your project has, the better your score. Ethic
 
 ---
 
+## Plugins
+
+EthicsCheck is extensible. Any package can add new framework checks by registering an entry point in the `ethicscheck.frameworks` group — the same mechanism used by `pytest` plugins.
+
+### Official plugin: `ethicscheck-plugin-callchain`
+
+Detects AI framework imports in your Python code and maps them to the governance obligations they trigger.
+
+```bash
+pip install ethicscheck-plugin-callchain
+```
+
+Once installed, `ethicscheck audit .` automatically runs five additional checks:
+
+| Check ID | Title | Severity |
+|---|---|---|
+| CC-IMPORT-001 | AI framework imports documented in technical docs | 🟠 high |
+| CC-IMPORT-002 | Risk management plan exists for AI-integrated system | 🔴 critical |
+| CC-BRANCH-001 | Human oversight mechanism present for AI-controlled branches | 🔴 critical |
+| CC-DATA-001 | Data provenance documented for AI training/fine-tuning imports | 🟠 high |
+| CC-SCOPE-001 | AI system boundary and scope documented | 🟡 medium |
+
+Detects usage of: `openai`, `anthropic`, `langchain`, `transformers`, `torch`, `tensorflow`, `keras`, `sklearn`, `xgboost`, `lightgbm`, `cohere`, `mistralai`, `groq`, `together`, `replicate`, `diffusers`, `sentence_transformers`, `peft`, `trl`, and more.
+
+Source: [github.com/zparris/ethicscheck-plugin-callchain](https://github.com/zparris/ethicscheck-plugin-callchain)
+
+### Writing your own plugin
+
+1. Create a class that extends `BaseFramework` from `ethicscheck.frameworks.base`
+2. Implement `check_metadata()` and `run_check()`
+3. Register the entry point in your `pyproject.toml`:
+
+```toml
+[project.entry-points."ethicscheck.frameworks"]
+my-framework = "my_package:MyFrameworkClass"
+```
+
+EthicsCheck will discover and run it automatically at audit time. See `src/ethicscheck/frameworks/base.py` for the full `BaseFramework` API.
+
+---
+
 ## Contributing
 
 Contributions welcome — especially new checks, additional framework coverage, and improved keyword detection.
